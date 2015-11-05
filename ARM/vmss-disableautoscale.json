@@ -1,0 +1,76 @@
+{
+	"$schema":"http://schema.management.azure.com/schemas/2015-01-01-preview/deploymentTemplate.json",
+	"contentVersion":"1.0.0.0",
+	"parameters":{
+			"vmSSName":{
+						"type":"string",
+						"metadata":{
+								"description":"The Name of the Scaleset"
+						}
+				}
+	},
+	"resources":[
+	  {
+    "type": "Microsoft.Insights/autoscaleSettings",
+    "apiVersion": "2015-04-01",
+    "name": "autoscalewad",
+    "location": "West Europe",
+    "properties": {
+      "name": "autoscalewad",
+      "targetResourceUri":"[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
+      "enabled": false,
+      "profiles":[
+         {
+            "name":"Profile1",
+            "capacity":{
+               "minimum":"2",
+               "maximum":"10",
+               "default":"2"
+            },
+            "rules":[
+               {
+                  "metricTrigger":{
+                     "metricName":"\\Processor(_Total)\\% Processor Time",
+                     "metricNamespace":"",
+                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
+                     "timeGrain":"PT1M",
+                     "statistic":"Average",
+                     "timeWindow":"PT5M",
+                     "timeAggregation":"Average",
+                     "operator":"GreaterThan",
+                     "threshold":50.0
+                  },
+                  "scaleAction":{
+                     "direction":"Increase",
+                     "type":"ChangeCount",
+                     "value":"1",
+                     "cooldown":"PT1M"
+                  }
+               },
+			   {
+                  "metricTrigger":{
+                     "metricName":"\\Processor(_Total)\\% Processor Time",
+                     "metricNamespace":"",
+                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
+                     "timeGrain":"PT1M",
+                     "statistic":"Average",
+                     "timeWindow":"PT5M",
+                     "timeAggregation":"Average",
+                     "operator":"LessThan",
+                     "threshold":40.0
+                  },
+                  "scaleAction":{
+                     "direction":"Decrease",
+                     "type":"ChangeCount",
+                     "value":"1",
+                     "cooldown":"PT2M"
+                  }
+               }
+            ]
+         }
+      ]
+    }
+  }	
+  ]
+}
+
