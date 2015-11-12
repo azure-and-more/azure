@@ -4,7 +4,7 @@
     $paramsObject = New-Object PSObject -Property $params
 
     $result = Start-SCORunbook `
-                -RunbookPath "\AzureAutomation\Get-InstalledSecurityUpdates" `
+                -RunbookPath "\AzureAutomation\GetInstalledSecurityUpdates" `
                 -InputParams $paramsObject
 
     $result
