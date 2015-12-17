@@ -34,7 +34,7 @@
     },
     "windowsOSVersion": {
       "type": "string",
-      "defaultValue": "Windows-Server-Technical-Preview",
+      "defaultValue": "2012-R2-Datacenter",
       "allowedValues": [
         "2008-R2-SP1",
         "2012-Datacenter",
@@ -249,7 +249,7 @@
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "[concat(parameters('vmName'),'/domainjoin')]",
-          "apiVersion": "2015-05-01-preview",
+          "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
@@ -257,7 +257,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "1.9",
+            "typeHandlerVersion": "2.8",
             "settings": {
               "ModulesUrl": "[concat(parameters('assetLocation'),'/DomainJoin.zip')]",
               "ConfigurationFunction": "DomainJoin.ps1\\DomainJoin",
