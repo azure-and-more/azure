@@ -344,16 +344,16 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmNamePrefix'),'/', variables('vmExtensionName'))]",
+      "name": "[concat(parameters('vmNamePrefix'), copyindex(),'/', variables('vmExtensionName'))]",
       "apiVersion": "2015-06-15",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix')), copyindex())]"
-      ],
+      "location": "[resourceGroup().location]",
       "copy": {
         "name": "DSCExtensionLoop",
         "count": "[variables('numberOfInstances')]"
       },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix'), copyindex())]"
+      ],   
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
