@@ -94,7 +94,7 @@
     },
     "assetLocation": {
       "type": "string",
-      "defaultValue": "https://github.com/Azure/azure-quickstart-templates/raw/master/201-vm-domain-join",
+      "defaultValue": "https://github.com/azure-and-more/azure/raw/master/ARM/DSC/DomainJoin.zip",
       "metadata": {
         "description": "The location of resources such as templates and DSC modules that the script is dependent"
       }
@@ -259,8 +259,8 @@
             "type": "DSC",
             "typeHandlerVersion": "1.9",
             "settings": {
-              "ModulesUrl": "[concat(parameters('assetLocation'),'/Configuration.zip')]",
-              "ConfigurationFunction": "Configuration.ps1\\DomainJoin",
+              "ModulesUrl": "[concat(parameters('assetLocation'),'/DomainJoin.zip')]",
+              "ConfigurationFunction": "DomainJoin.ps1\\DomainJoin",
               "Properties": {
                 "DomainName": "[parameters('domainName')]",
                 "AdminCreds": {
