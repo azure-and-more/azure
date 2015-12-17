@@ -88,6 +88,13 @@
       "metadata": {
         "description": "Size of the VM"
       }
+    },
+    "assetLocation": {
+      "type": "string",
+      "defaultValue": "https://github.com/azure-and-more/azure/raw/master/ARM/DSC",
+      "metadata": {
+        "description": "The location of resources such as templates and DSC modules that the script is dependent"
+      }
     }
   },
   "variables": {
@@ -104,7 +111,8 @@
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('lbName'))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
     "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
-    "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]"
+    "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
+    "vmExtensionName":  "WebsiteDSC"
   },
   "resources": [
     {
@@ -328,10 +336,33 @@
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
-             "enabled": "true",
-             "storageUri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net')]"
+            "enabled": "true",
+            "storageUri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net')]"
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmNamePrefix'),'/', variables('vmExtensionName'))]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix')), copyindex())]"
+      ],
+      "copy": {
+        "name": "DSCExtensionLoop",
+        "count": "[variables('numberOfInstances')]"
+      },
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.8",
+        "settings": {
+          "ModulesUrl": "[concat(parameters('assetLocation'),'/demo-BakeryWebsite.ps1.zip')]",
+          "ConfigurationFunction": "demo-BakeryWebsite.ps1\\BakeryWebsite"     
+        },
+        "protectedSettings": null
       }
     }
   ]
