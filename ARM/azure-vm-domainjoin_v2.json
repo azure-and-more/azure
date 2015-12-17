@@ -94,7 +94,7 @@
     },
     "assetLocation": {
       "type": "string",
-      "defaultValue": "https://github.com/azure-and-more/azure/raw/master/ARM/DSC/DomainJoin.zip",
+      "defaultValue": "https://github.com/azure-and-more/azure/raw/master/ARM/DSC",
       "metadata": {
         "description": "The location of resources such as templates and DSC modules that the script is dependent"
       }
